@@ -57,7 +57,7 @@ class DashboardController extends Controller
 
         // Ventas mensuales (últimos 12 meses)
         $monthly = Venta::select(
-            DB::raw("strftime('%Y-%m', fecha) as ym"),
+            DB::raw("DATE_FORMAT(fecha, '%Y-%m') as ym"),
             DB::raw('SUM(total_pedido) as total')
         );
         if ($linea !== 'Todas') {
