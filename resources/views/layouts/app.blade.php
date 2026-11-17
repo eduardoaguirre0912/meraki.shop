@@ -8,6 +8,39 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body class="bg-gray-100 text-gray-800 antialiased">
+    <!-- Mobile top bar -->
+    <div class="md:hidden bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+        <h1 class="text-lg font-bold text-pink-600">POS & Inventario</h1>
+        <button onclick="document.getElementById('mobileMenu').classList.toggle('hidden')" class="p-2 rounded-lg border border-gray-300">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+    </div>
+    <div id="mobileMenu" class="md:hidden hidden bg-white border-b border-gray-200 px-4 py-3">
+        <nav class="space-y-1 text-sm">
+            @php
+                $mnav = [
+                    ['dashboard', 'Resumen'],
+                    ['clientas.index', 'Clientas'],
+                    ['productos.index', 'Productos'],
+                    ['ventas.index', 'Ventas'],
+                    ['entregas.index', 'Entregas'],
+                    ['entradas.index', 'Entradas Inventario'],
+                    ['gastos.index', 'Gastos'],
+                    ['puntos.index', 'Puntos de Encuentro'],
+                    ['finanzas.index', 'Finanzas'],
+                    ['reportes.index', 'Reportes'],
+                    ['retiros.index', 'Retiros (Edu/Dian)'],
+                ];
+            @endphp
+            @foreach($mnav as $n)
+                <a href="{{ route($n[0]) }}" class="block px-3 py-2 rounded-lg {{ request()->routeIs($n[0].'*') || request()->routeIs($n[0]) ? 'bg-pink-50 text-pink-700 font-medium' : 'text-gray-600 hover:bg-gray-50' }}">{{ $n[1] }}</a>
+            @endforeach
+            <form method="POST" action="{{ route('logout') }}" class="pt-2">
+                @csrf
+                <button class="w-full text-left px-3 py-2 text-sm text-red-600">Cerrar sesión</button>
+            </form>
+        </nav>
+    </div>
     <div class="flex min-h-screen">
         <aside class="w-64 bg-white border-r border-gray-200 hidden md:block">
             <div class="p-6 border-b border-gray-200">
@@ -44,7 +77,7 @@
                 </form>
             </div>
         </aside>
-        <main class="flex-1 p-6">
+        <main class="flex-1 p-4 md:p-6">
             @if(session('success'))
                 <div class="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm">{{ session('success') }}</div>
             @endif

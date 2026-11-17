@@ -57,11 +57,14 @@ class FinanzasController extends Controller
         $cuentasPorCobrar = Venta::sum('saldo_pendiente');
 
         // charts data
-        $monthly = Venta::select(DB::raw("DATE_FORMAT(fecha, '%Y-%m') as ym"), DB::raw('SUM(total_pedido) as ventas'), DB::raw('SUM(utilidad_bruta) as utilidad'))
+        $ym = DB::getDriverName() === 'sqlite'
+            ? "strftime('%Y-%m', fecha)"
+            : "DATE_FORMAT(fecha, '%Y-%m')";
+        $monthly = Venta::select(DB::raw("$ym as ym"), DB::raw('SUM(total_pedido) as ventas'), DB::raw('SUM(utilidad_bruta) as utilidad'))
             ->where('fecha', '>=', now()->subMonths(11)->startOfMonth()->toDateString())
             ->groupBy('ym')->orderBy('ym')->get();
 
-        $gastosMes = Gasto::select(DB::raw("DATE_FORMAT(fecha, '%Y-%m') as ym"), DB::raw('SUM(monto) as total'))
+        $gastosMes = Gasto::select(DB::raw("$ym as ym"), DB::raw('SUM(monto) as total'))
             ->where('fecha', '>=', now()->subMonths(11)->startOfMonth()->toDateString())
             ->groupBy('ym')->orderBy('ym')->get();
 

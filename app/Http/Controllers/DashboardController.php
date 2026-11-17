@@ -56,8 +56,11 @@ class DashboardController extends Controller
         $productosBajoLista = Producto::whereColumn('stock_actual', '<=', 'stock_minimo')->orderBy('stock_actual')->limit(5)->get();
 
         // Ventas mensuales (últimos 12 meses)
+        $ym = DB::getDriverName() === 'sqlite'
+            ? "strftime('%Y-%m', fecha)"
+            : "DATE_FORMAT(fecha, '%Y-%m')";
         $monthly = Venta::select(
-            DB::raw("DATE_FORMAT(fecha, '%Y-%m') as ym"),
+            DB::raw("$ym as ym"),
             DB::raw('SUM(total_pedido) as total')
         );
         if ($linea !== 'Todas') {
