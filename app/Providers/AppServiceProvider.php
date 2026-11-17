@@ -20,14 +20,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
 {
-    $link = public_path('storage');
-
-    if (! file_exists($link) && ! is_link($link)) {
-        try {
-            symlink(storage_path('app/public'), $link);
-        } catch (\Throwable $e) {
-            // Si el servidor no permite enlaces, la app sigue funcionando
-        }
-    }
+  
 }
 }
