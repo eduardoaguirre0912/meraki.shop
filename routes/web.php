@@ -52,3 +52,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/gasto-categorias/{categoria}', [GastoCategoriaController::class, 'update'])->name('gasto-categorias.update');
     Route::post('/gasto-categorias/{categoria}/toggle', [GastoCategoriaController::class, 'toggle'])->name('gasto-categorias.toggle');
 });
+
+
+Route::get('/storage/{path}', function (string $path) {
+    $file = storage_path('app/public/' . $path);
+    abort_unless(is_file($file), 404);
+    return response()->file($file);
+})->where('path', '.*');
