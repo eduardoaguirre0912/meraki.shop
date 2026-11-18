@@ -33,7 +33,8 @@ class GastoController extends Controller
             'tipo_gasto' => 'nullable|string',
             'concepto' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
-            'monto' => 'required|numeric|min:0',
+            'monto' => 'required|numeric',
+            'es_devolucion' => 'nullable|boolean',
             'metodo_pago' => 'required|string',
             'linea_negocio' => 'required|string',
             'estado' => 'required|string',
@@ -48,6 +49,10 @@ class GastoController extends Controller
         }
         if ($request->hasFile('comprobante')) {
             $data['comprobante'] = $request->file('comprobante')->store('comprobantes', 'public');
+        }
+        if ($request->boolean('es_devolucion')) {
+            $data['monto'] = -abs((float) $data['monto']);
+            $data['tipo_gasto'] = 'Devolución/Reembolso';
         }
         Gasto::create($data);
         return redirect()->route('gastos.index')->with('success', 'Gasto registrado.');
@@ -66,7 +71,8 @@ class GastoController extends Controller
             'tipo_gasto' => 'nullable|string',
             'concepto' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
-            'monto' => 'required|numeric|min:0',
+            'monto' => 'required|numeric',
+            'es_devolucion' => 'nullable|boolean',
             'metodo_pago' => 'required|string',
             'linea_negocio' => 'required|string',
             'estado' => 'required|string',
@@ -82,6 +88,10 @@ class GastoController extends Controller
                 \Illuminate\Support\Facades\Storage::disk('public')->delete($gasto->comprobante);
             }
             $data['comprobante'] = $request->file('comprobante')->store('comprobantes', 'public');
+        }
+        if ($request->boolean('es_devolucion')) {
+            $data['monto'] = -abs((float) $data['monto']);
+            $data['tipo_gasto'] = 'Devolución/Reembolso';
         }
         $gasto->update($data);
         return redirect()->route('gastos.index')->with('success', 'Gasto actualizado.');

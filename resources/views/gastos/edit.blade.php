@@ -37,6 +37,10 @@
             <label class="block text-sm font-medium mb-1">Monto</label>
             <input type="number" step="0.01" name="monto" value="{{ $gasto->monto }}" required class="w-full border border-gray-300 rounded-lg px-3 py-2">
         </div>
+        <div class="flex items-center gap-2">
+            <input type="checkbox" name="es_devolucion" value="1" id="es_devolucion" {{ $gasto->monto < 0 ? 'checked' : '' }}>
+            <label for="es_devolucion" class="text-sm">Es devolución/reembolso (se guarda como negativo)</label>
+        </div>
         <div>
             <label class="block text-sm font-medium mb-1">Método de pago</label>
             <select name="metodo_pago" required class="w-full border border-gray-300 rounded-lg px-3 py-2">
